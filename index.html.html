@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Niall Browne & Company — Book a Viewing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#17263A;
+    --ink-soft:#28405B;
+    --limestone:#F1ECE1;
+    --limestone-warm:#E9E1D0;
+    --harbor:#2F5C58;
+    --brass:#B08A4E;
+    --charcoal:#23201C;
+    --line: rgba(23,38,58,0.12);
+    --radius: 3px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--limestone);
+    color:var(--charcoal);
+    font-family:'Public Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+    margin:0;
+  }
+  a{color:inherit;}
+
+  /* ---- Top bar (mimics existing site identity) ---- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:22px 6vw;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    font-family:'Fraunces', serif;
+    font-size:19px;
+    font-weight:600;
+    color:var(--ink);
+    letter-spacing:0.01em;
+  }
+  .brand span{color:var(--brass);}
+  .topbar-tag{
+    font-size:12px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    opacity:0.7;
+  }
+
+  /* ---- Hero ---- */
+  .hero{
+    padding:72px 6vw 56px;
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap:56px;
+    align-items:center;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .eyebrow{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:12.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--harbor);
+    font-weight:600;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px;
+    height:1px;
+    background:var(--harbor);
+    display:inline-block;
+  }
+  .hero h1{
+    font-size:clamp(34px, 4.2vw, 52px);
+    line-height:1.08;
+  }
+  .hero p.lead{
+    font-size:17px;
+    line-height:1.65;
+    color:var(--ink-soft);
+    max-width:46ch;
+    margin-top:20px;
+  }
+  .hero-stats{
+    display:flex;
+    gap:34px;
+    margin-top:34px;
+  }
+  .stat b{
+    font-family:'Fraunces', serif;
+    font-size:26px;
+    color:var(--ink);
+    display:block;
+    font-weight:500;
+  }
+  .stat span{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    opacity:0.8;
+  }
+
+  .hero-note{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    opacity:0.65;
+    margin-top:30px;
+    border-top:1px solid var(--line);
+    padding-top:16px;
+    max-width:42ch;
+  }
+
+  /* ---- Booking card ---- */
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow: 0 24px 48px -30px rgba(23,38,58,0.35);
+    overflow:hidden;
+  }
+  .card-head{
+    background:var(--ink);
+    color:var(--limestone);
+    padding:22px 26px;
+  }
+  .card-head h2{
+    color:#fff;
+    font-size:19px;
+    font-weight:500;
+  }
+  .card-head p{
+    margin:6px 0 0;
+    font-size:12.5px;
+    color:rgba(241,236,225,0.65);
+  }
+
+  .steps{
+    display:flex;
+    padding:16px 26px 0;
+    gap:6px;
+  }
+  .step-dot{
+    flex:1;
+    height:2px;
+    background:var(--line);
+    position:relative;
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .step-dot::after{
+    content:"";
+    position:absolute; inset:0;
+    background:var(--brass);
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:transform .35s ease;
+  }
+  .step-dot.done::after, .step-dot.active::after{transform:scaleX(1);}
+
+  .card-body{padding:26px;}
+  .step-label{
+    font-size:11.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--brass);
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .step-title{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    color:var(--ink);
+    margin-bottom:18px;
+  }
+
+  .option-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .option{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px 14px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    color:var(--ink-soft);
+    background:#fff;
+    transition:border-color .15s, background .15s, color .15s;
+  }
+  .option:hover{border-color:var(--harbor);}
+  .option.selected{
+    border-color:var(--harbor);
+    background:var(--harbor);
+    color:#fff;
+  }
+  .option small{
+    display:block;
+    font-weight:400;
+    font-size:12px;
+    margin-top:3px;
+    opacity:0.75;
+  }
+
+  .day-row{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding-bottom:6px;
+    margin-bottom:14px;
+  }
+  .day{
+    flex:0 0 auto;
+    width:56px;
+    text-align:center;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:10px 4px;
+    cursor:pointer;
+    font-size:13px;
+  }
+  .day .dname{font-size:10.5px; text-transform:uppercase; opacity:0.6;}
+  .day .dnum{font-family:'Fraunces', serif; font-size:17px; margin-top:2px;}
+  .day.selected{background:var(--ink); color:#fff; border-color:var(--ink);}
+
+  .time-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+  }
+  .time{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:9px 6px;
+    text-align:center;
+    font-size:13px;
+    cursor:pointer;
+    color:var(--ink-soft);
+  }
+  .time:hover{border-color:var(--brass);}
+  .time.selected{background:var(--brass); border-color:var(--brass); color:#fff;}
+
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .field input, .field select{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    font-size:14px;
+    font-family:'Public Sans', sans-serif;
+    background:#fff;
+    color:var(--charcoal);
+  }
+  .field input:focus, .field select:focus, .option:focus-visible, .day:focus-visible, .time:focus-visible{
+    outline:2px solid var(--harbor);
+    outline-offset:1px;
+  }
+
+  .card-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 26px;
+    border-top:1px solid var(--line);
+  }
+  .btn{
+    border:none;
+    border-radius:var(--radius);
+    padding:12px 20px;
+    font-size:13.5px;
+    font-weight:700;
+    letter-spacing:0.01em;
+    cursor:pointer;
+    font-family:'Public Sans', sans-serif;
+  }
+  .btn-primary{background:var(--ink); color:#fff;}
+  .btn-primary:hover{background:var(--ink-soft);}
+  .btn-ghost{background:transparent; color:var(--ink-soft); padding:12px 8px;}
+  .btn-primary:disabled{background:#c9c2b3; cursor:not-allowed;}
+
+  .confirm{
+    text-align:center;
+    padding:12px 4px 4px;
+  }
+  .confirm .mark{
+    width:46px;height:46px;
+    border-radius:50%;
+    background:var(--harbor);
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 16px;
+    font-size:20px;
+  }
+  .confirm-summary{
+    background:var(--limestone-warm);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    text-align:left;
+    font-size:13.5px;
+    line-height:1.9;
+    margin-top:18px;
+    color:var(--ink-soft);
+  }
+  .confirm-summary b{color:var(--ink);}
+
+  .hidden{display:none !important;}
+
+  /* ---- Footer note ---- */
+  .footer-note{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 6vw 60px;
+    color:var(--ink-soft);
+    opacity:0.55;
+    font-size:12px;
+    text-align:center;
+  }
+
+  @media (max-width:880px){
+    .hero{grid-template-columns:1fr; padding:44px 6vw 40px;}
+    .hero-stats{gap:26px;}
+    .option-grid{grid-template-columns:1fr;}
+    .time-grid{grid-template-columns:repeat(2,1fr);}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .step-dot::after{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">Niall Browne <span>&amp; Co.</span></div>
+    <div class="topbar-tag">Odeon House · Eyre Square · Galway</div>
+  </div>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Concept demo — online booking</div>
+      <h1>Book a viewing<br>without picking up the phone.</h1>
+      <p class="lead">A working example of what visitors to niallbrowne.ie could do directly on the site — pick a viewing or valuation, choose a time, and confirm in under a minute. No calls, no back-and-forth email.</p>
+      <div class="hero-stats">
+        <div class="stat"><b>25</b><span>Years in Galway property</span></div>
+        <div class="stat"><b>1,000+</b><span>Homes sold</span></div>
+        <div class="stat"><b>24/7</b><span>Booking availability</span></div>
+      </div>
+      <div class="hero-note">This is a standalone concept built to demonstrate the idea — not connected to Niall Browne &amp; Company's live systems. Built by ZAIR Software Solutions.</div>
+    </div>
+
+    <div class="card" id="card">
+      <div class="card-head">
+        <h2>Book a viewing or valuation</h2>
+        <p>Takes about a minute</p>
+      </div>
+      <div class="steps">
+        <div class="step-dot active" data-dot="1"></div>
+        <div class="step-dot" data-dot="2"></div>
+        <div class="step-dot" data-dot="3"></div>
+        <div class="step-dot" data-dot="4"></div>
+      </div>
+
+      <div class="card-body">
+
+        <!-- Step 1 -->
+        <div class="step" id="step-1">
+          <div class="step-label">Step 1 of 4</div>
+          <div class="step-title">What do you need?</div>
+          <div class="option-grid" id="service-options">
+            <div class="option" data-value="Property viewing">Property viewing<small>Walk through a listed home</small></div>
+            <div class="option" data-value="Free valuation">Free valuation<small>Find out what your home is worth</small></div>
+            <div class="option" data-value="Probate valuation">Probate valuation<small>For estate administration</small></div>
+            <div class="option" data-value="General consultation">General consultation<small>Buying, selling or advice</small></div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step hidden" id="step-2">
+          <div class="step-label">Step 2 of 4</div>
+          <div class="step-title">Choose a day</div>
+          <div class="day-row" id="day-row"></div>
+          <div class="step-label" style="margin-top:16px;">Available times</div>
+          <div class="time-grid" id="time-grid">
+            <div class="time" data-value="9:30am">9:30am</div>
+            <div class="time" data-value="11:00am">11:00am</div>
+            <div class="time" data-value="12:30pm">12:30pm</div>
+            <div class="time" data-value="2:00pm">2:00pm</div>
+            <div class="time" data-value="3:30pm">3:30pm</div>
+            <div class="time" data-value="5:00pm">5:00pm</div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step hidden" id="step-3">
+          <div class="step-label">Step 3 of 4</div>
+          <div class="step-title">Your details</div>
+          <div class="field">
+            <label for="fname">Full name</label>
+            <input id="fname" type="text" placeholder="e.g. Sarah Molloy">
+          </div>
+          <div class="field">
+            <label for="femail">Email</label>
+            <input id="femail" type="email" placeholder="you@email.com">
+          </div>
+          <div class="field">
+            <label for="fphone">Phone</label>
+            <input id="fphone" type="tel" placeholder="086 000 0000">
+          </div>
+          <div class="field">
+            <label for="fnote">Anything to add? (optional)</label>
+            <input id="fnote" type="text" placeholder="e.g. property address, questions">
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step hidden" id="step-4">
+          <div class="confirm">
+            <div class="mark">✓</div>
+            <div class="step-title" style="text-align:center;">Booking confirmed</div>
+            <p style="color:var(--ink-soft); font-size:13.5px; margin-top:6px;">A confirmation would be sent to your email and to the office instantly — no manual follow-up needed.</p>
+            <div class="confirm-summary" id="summary"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card-foot">
+        <button class="btn btn-ghost" id="backBtn">Back</button>
+        <button class="btn btn-primary" id="nextBtn" disabled>Continue</button>
+      </div>
+    </div>
+  </section>
+
+  <p class="footer-note">Concept demo prepared for Niall Browne &amp; Company by ZAIR Software Solutions — showing how an online booking flow could sit directly on niallbrowne.ie.</p>
+
+<script>
+  const state = { service:null, day:null, time:null, name:'', email:'', phone:'', note:'' };
+  let current = 1;
+
+  const steps = document.querySelectorAll('.step');
+  const dots = document.querySelectorAll('.step-dot');
+  const nextBtn = document.getElementById('nextBtn');
+  const backBtn = document.getElementById('backBtn');
+
+  // Build next 6 available weekdays
+  const dayRow = document.getElementById('day-row');
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let added = 0, offset = 1;
+  while(added < 6){
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    offset++;
+    if(d.getDay() === 0) continue; // skip Sunday
+    const el = document.createElement('div');
+    el.className = 'day';
+    el.tabIndex = 0;
+    el.dataset.value = d.toDateString();
+    el.innerHTML = `<div class="dname">${dayNames[d.getDay()]}</div><div class="dnum">${d.getDate()}</div>`;
+    el.addEventListener('click', () => selectDay(el));
+    dayRow.appendChild(el);
+    added++;
+  }
+
+  function selectDay(el){
+    document.querySelectorAll('.day').forEach(d=>d.classList.remove('selected'));
+    el.classList.add('selected');
+    state.day = el.dataset.value;
+    checkStep2();
+  }
+
+  document.querySelectorAll('.time').forEach(t=>{
+    t.tabIndex = 0;
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.time').forEach(x=>x.classList.remove('selected'));
+      t.classList.add('selected');
+      state.time = t.dataset.value;
+      checkStep2();
+    });
+  });
+
+  document.querySelectorAll('#service-options .option').forEach(o=>{
+    o.tabIndex = 0;
+    o.addEventListener('click', () => {
+      document.querySelectorAll('#service-options .option').forEach(x=>x.classList.remove('selected'));
+      o.classList.add('selected');
+      state.service = o.dataset.value;
+      nextBtn.disabled = false;
+    });
+  });
+
+  function checkStep2(){
+    nextBtn.disabled = !(state.day && state.time);
+  }
+
+  ['fname','femail','fphone','fnote'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', checkStep3);
+  });
+  function checkStep3(){
+    state.name = document.getElementById('fname').value.trim();
+    state.email = document.getElementById('femail').value.trim();
+    state.phone = document.getElementById('fphone').value.trim();
+    state.note = document.getElementById('fnote').value.trim();
+    nextBtn.disabled = !(state.name && state.email && state.phone);
+  }
+
+  function goTo(n){
+    steps.forEach(s=>s.classList.add('hidden'));
+    document.getElementById('step-'+n).classList.remove('hidden');
+    dots.forEach((d,i)=>{
+      d.classList.remove('active','done');
+      if(i < n-1) d.classList.add('done');
+      if(i === n-1) d.classList.add('active');
+    });
+    backBtn.style.visibility = n === 1 ? 'hidden' : 'visible';
+    if(n === 1) nextBtn.disabled = !state.service;
+    if(n === 2) nextBtn.disabled = !(state.day && state.time);
+    if(n === 3){ nextBtn.disabled = !(state.name && state.email && state.phone); }
+    if(n === 4){
+      nextBtn.textContent = 'Book another';
+      document.getElementById('summary').innerHTML =
+        `<b>Service:</b> ${state.service}<br>
+         <b>When:</b> ${state.day.split(' ').slice(0,3).join(' ')} at ${state.time}<br>
+         <b>Name:</b> ${state.name}<br>
+         <b>Contact:</b> ${state.email} · ${state.phone}` +
+         (state.note ? `<br><b>Note:</b> ${state.note}` : '');
+    } else {
+      nextBtn.textContent = 'Continue';
+    }
+    current = n;
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if(current < 4){ goTo(current+1); }
+    else {
+      // reset
+      state.service=null; state.day=null; state.time=null;
+      document.querySelectorAll('.option, .day, .time').forEach(x=>x.classList.remove('selected'));
+      ['fname','femail','fphone','fnote'].forEach(id=>document.getElementById(id).value='');
+      goTo(1);
+    }
+  });
+  backBtn.addEventListener('click', () => { if(current > 1) goTo(current-1); });
+
+  goTo(1);
+</script>
+
+</body>
+</html>
